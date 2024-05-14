@@ -1,19 +1,19 @@
 import 'movie.dart';
 
-class Populer {
+class Discover {
   int page;
   List<Movie> movie;
   int totalPages;
   int totalResults;
 
-  Populer({
+  Discover({
     required this.page,
     required this.movie,
     required this.totalPages,
     required this.totalResults,
   });
 
-  factory Populer.fromJson(Map<String, dynamic> json) => Populer(
+  factory Discover.fromJson(Map<String, dynamic> json) => Discover(
         page: json["page"],
         movie:
             List<Movie>.from(json["results"].map((x) => Movie.fromJson(x))),
@@ -28,3 +28,4 @@ class Populer {
         "total_results": totalResults,
       };
 }
+
