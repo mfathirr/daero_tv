@@ -1,11 +1,12 @@
-import 'package:daero_tv/providers/popular_movie.dart';
+import 'package:daero_tv/providers/top_rated_movie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Movies extends StatelessWidget {
-  static const routeName = '/movies_page';
+class TopRatedMovies extends StatelessWidget {
+  static const routeName = '/top_rated_page';
   final String imagePath;
-  const Movies({super.key, required this.imagePath});
+
+  const TopRatedMovies({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -13,19 +14,19 @@ class Movies extends StatelessWidget {
         child: Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Most Popular"),
+        title: const Text("Top Movie"),
       ),
-      body: Consumer<MoviePopularProvider>(
+      body: Consumer<MovieTopRatedProvider>(
         builder:
-            (BuildContext context, MoviePopularProvider value, Widget? child) {
+            (BuildContext context, MovieTopRatedProvider value, Widget? child) {
           return GridView.builder(
-            itemCount: value.result.length,
+            itemCount: value.result?.length,
             itemBuilder: (context, index) {
               return Card(
                 child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(4)),
                     child: Image.network(
-                      "$imagePath${value.result[index].posterPath}",
+                      "$imagePath${value.result?[index].posterPath}",
                       fit: BoxFit.cover,
                     )),
               );

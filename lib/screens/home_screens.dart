@@ -1,7 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
-import 'package:daero_tv/screens/movies_popular.dart';
+import 'package:daero_tv/screens/popular_movies.dart';
+import 'package:daero_tv/screens/top_rated_movies.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -14,85 +18,118 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Daero TV'),
+          ),
           body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Most Popular',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Movies.routeName,
-                          arguments: getImage);
-                    },
-                    icon: const Icon(Icons.arrow_forward_ios_rounded))
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            _buildPopularMovie(),
-            const SizedBox(
-              height: 12,
-            ),
-            Text(
-              'Top Rated',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            Consumer<top_rated.MovieTopRatedProvider>(
-              builder: (context, value, child) {
-                if (value.state == top_rated.ResultState.loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (value.state == top_rated.ResultState.hasData) {
-                  var topRated = value.result;
-                  return SizedBox(
-                    height: 255,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: value.result.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: Stack(alignment: Alignment.center, children: [
+                Consumer<popular.MoviePopularProvider>(
+                  builder: (context, value, child) {
+                    return CarouselSlider.builder(
+                      options: CarouselOptions(
+                          viewportFraction: 1,
+                          initialPage: 0,
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(seconds: 3),
+                          enlargeCenterPage: true,
+                          enlargeFactor: 0.5),
+                      itemCount: 5,
+                      itemBuilder:
+                          (BuildContext context, int index, int realIndex) {
+                        return SizedBox(
+                          child: Stack(children: [
                             ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(4)),
-                                child: Image.network(
-                                    "$getImage${topRated[index].posterPath}")),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                              child: Image.network(
+                                  "$getImage${value.result?[index].backdropPath}"),
+                            ),
                           ]),
                         );
                       },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          width: 8,
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Material(
-                      child: Text(value.message),
-                    ),
-                  );
-                }
-              },
-            )
-          ],
+                    );
+                  },
+                ),
+                _buildTextIconArrow(
+                    "Popular Movie", context, PopularMovies.routeName),
+                const SizedBox(
+                  height: 12,
+                ),
+                _buildPopularMovie(),
+                const SizedBox(
+                  height: 12,
+                ),
+                _buildTextIconArrow(
+                    "Top-Rated Movie", context, TopRatedMovies.routeName),
+                _buildTopRatedMovie()
+              ],
+            ),
+          )),
+    );
+  }
+
+  Row _buildTextIconArrow(String text, BuildContext context, route) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          text,
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
-      )),
+        IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, route, arguments: getImage);
+            },
+            icon: const Icon(Icons.arrow_forward_ios_rounded))
+      ],
+    );
+  }
+
+  Consumer<top_rated.MovieTopRatedProvider> _buildTopRatedMovie() {
+    return Consumer<top_rated.MovieTopRatedProvider>(
+      builder: (context, value, child) {
+        if (value.state == top_rated.ResultState.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (value.state == top_rated.ResultState.hasData) {
+          var topRated = value.result;
+          return SizedBox(
+            height: 255,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Stack(alignment: Alignment.center, children: [
+                    ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(4)),
+                        child: Image.network(
+                            "$getImage${topRated?[index].posterPath}")),
+                  ]),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(
+                  width: 8,
+                );
+              },
+            ),
+          );
+        } else {
+          return Center(
+            child: Material(
+              child: Text(value.message),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -110,13 +147,13 @@ class HomePage extends StatelessWidget {
             height: 255,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: value.result.length,
+              itemCount: 5,
               itemBuilder: (context, index) {
                 return Card(
                   child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(4)),
                       child: Image.network(
-                          "$getImage${popular[index].posterPath}")),
+                          "$getImage${popular?[index].posterPath}")),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {

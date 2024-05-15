@@ -12,11 +12,11 @@ class MoviePopularProvider extends ChangeNotifier {
   }
 
   late ResultState _state;
-  late List<Movie> _result;
+  List<Movie>? _result;
   String _message = '';
 
   ResultState get state => _state;
-  List<Movie> get result => _result;
+  List<Movie>? get result => _result;
   String get message => _message;
 
   Future<dynamic> fetchPopularMovie() async {
