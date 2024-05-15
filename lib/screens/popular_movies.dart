@@ -1,4 +1,5 @@
 import 'package:daero_tv/providers/popular_movie.dart';
+import 'package:daero_tv/screens/movie_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +23,17 @@ class PopularMovies extends StatelessWidget {
             itemCount: value.result?.length,
             itemBuilder: (context, index) {
               return Card(
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(4)),
-                    child: Image.network(
-                      "$imagePath${value.result?[index].posterPath}",
-                      fit: BoxFit.cover,
-                    )),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, MovieDetailPage.routeName);
+                  },
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      child: Image.network(
+                        "$imagePath${value.result?[index].posterPath}",
+                        fit: BoxFit.cover,
+                      )),
+                ),
               );
             },
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

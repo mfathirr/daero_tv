@@ -3,9 +3,7 @@ import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,32 +23,9 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Consumer<popular.MoviePopularProvider>(
-                  builder: (context, value, child) {
-                    return CarouselSlider.builder(
-                      options: CarouselOptions(
-                          viewportFraction: 1,
-                          initialPage: 0,
-                          autoPlay: true,
-                          autoPlayInterval: const Duration(seconds: 3),
-                          enlargeCenterPage: true,
-                          enlargeFactor: 0.5),
-                      itemCount: 5,
-                      itemBuilder:
-                          (BuildContext context, int index, int realIndex) {
-                        return SizedBox(
-                          child: Stack(children: [
-                            ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(6)),
-                              child: Image.network(
-                                  "$getImage${value.result?[index].backdropPath}"),
-                            ),
-                          ]),
-                        );
-                      },
-                    );
-                  },
+                _buildCarousel(),
+                const SizedBox(
+                  height: 12,
                 ),
                 _buildTextIconArrow(
                     "Popular Movie", context, PopularMovies.routeName),
@@ -70,23 +45,59 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Row _buildTextIconArrow(String text, BuildContext context, route) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: Theme.of(context)
-              .textTheme
-              .titleLarge
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, route, arguments: getImage);
+  Consumer<popular.MoviePopularProvider> _buildCarousel() {
+    return Consumer<popular.MoviePopularProvider>(
+      builder: (context, value, child) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: CarouselSlider.builder(
+            options: CarouselOptions(
+                viewportFraction: 1,
+                initialPage: 0,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                enlargeCenterPage: true,
+                enlargeFactor: 0.5),
+            itemCount: 5,
+            itemBuilder: (BuildContext context, int index, int realIndex) {
+              return SizedBox(
+                child: Stack(children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                    child: Image.network(
+                        "$getImage${value.result?[index].backdropPath}"),
+                  ),
+                ]),
+              );
             },
-            icon: const Icon(Icons.arrow_forward_ios_rounded))
-      ],
+          ),
+        );
+      },
+    );
+  }
+
+  Padding _buildTextIconArrow(String text, BuildContext context, route) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            text,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          IconButton(
+              padding: EdgeInsets.zero,
+              // constraints: const BoxConstraints(),
+              onPressed: () {
+                Navigator.pushNamed(context, route, arguments: getImage);
+              },
+              icon: const Icon(Icons.arrow_forward_ios_rounded))
+        ],
+      ),
     );
   }
 
@@ -100,7 +111,7 @@ class HomePage extends StatelessWidget {
         } else if (value.state == top_rated.ResultState.hasData) {
           var topRated = value.result;
           return SizedBox(
-            height: 255,
+            height: 225,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: 5,
@@ -144,7 +155,7 @@ class HomePage extends StatelessWidget {
         } else if (value.state == popular.ResultState.hasData) {
           var popular = value.result;
           return SizedBox(
-            height: 255,
+            height: 225,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: 5,
