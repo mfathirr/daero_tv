@@ -7,7 +7,9 @@ enum ResultState { loading, noData, hasData, error }
 class MovieProvider extends ChangeNotifier {
   final ApiService apiService;
 
-  MovieProvider({required this.apiService}) {}
+  MovieProvider({required this.apiService}) {
+    fetchDiscoverMovie();
+  }
 
   late ResultState _state;
   late List<Movie> _result;

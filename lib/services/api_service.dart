@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:daero_tv/model/movie_discover.dart';
 import 'package:http/http.dart' as http;
 
