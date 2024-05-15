@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 enum ResultState { loading, noData, hasData, error }
 
-class MovieProvider extends ChangeNotifier {
+class MovieTopRatedProvider extends ChangeNotifier {
   final ApiService apiService;
 
-  MovieProvider({required this.apiService}) {
-    fetchDiscoverMovie();
+  MovieTopRatedProvider({required this.apiService}) {
+    fetchTopRatedMovie();
   }
 
   late ResultState _state;
@@ -19,10 +19,10 @@ class MovieProvider extends ChangeNotifier {
   List<Movie> get result => _result;
   String get message => _message;
 
-  Future<dynamic> fetchDiscoverMovie() async {
+  Future<dynamic> fetchTopRatedMovie() async {
     try {
       _state = ResultState.loading;
-      final movie = await apiService.fetchMovie();
+      final movie = await apiService.fetchTopRatedMovie();
       if (movie.movie.isEmpty) {
         _state = ResultState.noData;
         _message = 'Data is Empty';

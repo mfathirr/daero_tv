@@ -1,4 +1,5 @@
-import 'package:daero_tv/providers/discover_movie.dart';
+import 'package:daero_tv/providers/popular_movie.dart';
+import 'package:daero_tv/providers/top_rated_movie.dart';
 import 'package:daero_tv/screens/home_screens.dart';
 import 'package:daero_tv/services/api_service.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => MovieProvider(apiService: ApiService()),
+          create: (context) => MoviePopularProvider(apiService: ApiService()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MovieTopRatedProvider(apiService: ApiService()),
         )
       ],
       child: MaterialApp(

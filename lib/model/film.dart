@@ -1,22 +1,21 @@
 import 'movie.dart';
 
-class Discover {
+class Film {
   int page;
   List<Movie> movie;
   int totalPages;
   int totalResults;
 
-  Discover({
+  Film({
     required this.page,
     required this.movie,
     required this.totalPages,
     required this.totalResults,
   });
 
-  factory Discover.fromJson(Map<String, dynamic> json) => Discover(
+  factory Film.fromJson(Map<String, dynamic> json) => Film(
         page: json["page"],
-        movie:
-            List<Movie>.from(json["results"].map((x) => Movie.fromJson(x))),
+        movie: List<Movie>.from(json["results"].map((x) => Movie.fromJson(x))),
         totalPages: json["total_pages"],
         totalResults: json["total_results"],
       );
@@ -28,4 +27,3 @@ class Discover {
         "total_results": totalResults,
       };
 }
-
