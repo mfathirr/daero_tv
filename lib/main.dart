@@ -1,6 +1,7 @@
 import 'package:daero_tv/providers/popular_movie.dart';
 import 'package:daero_tv/providers/top_rated_movie.dart';
 import 'package:daero_tv/screens/home_screens.dart';
+import 'package:daero_tv/screens/movie_detail.dart';
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
 import 'package:daero_tv/services/api_service.dart';
@@ -34,7 +35,9 @@ class MyApp extends StatelessWidget {
                 imagePath: ModalRoute.of(context)?.settings.arguments as String,
               ),
           TopRatedMovies.routeName: (context) => TopRatedMovies(
-              imagePath: ModalRoute.of(context)?.settings.arguments as String)
+              imagePath: ModalRoute.of(context)?.settings.arguments as String),
+          MovieDetailPage.routeName: (context) => MovieDetailPage(
+              id: ModalRoute.of(context)?.settings.arguments as int)
         },
       ),
     );

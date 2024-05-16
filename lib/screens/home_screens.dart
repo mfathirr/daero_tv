@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
+import 'package:daero_tv/screens/movie_detail.dart';
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,51 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildCarousel(),
+                const SizedBox(
+                  height: 12,
+                ),
+Consumer<popular.MoviePopularProvider>(builder: (context, value, child) {
+                  if (value.state == popular.ResultState.loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (value.state == popular.ResultState.hasData) {
+                    var popular = value.result;
+                    return SizedBox(
+                      height: 225,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: popular?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, MovieDetailPage.routeName,
+                                  arguments: popular?[index].id);
+                            },
+                            child: Card(
+                              child: ClipRRect(
+                                  borderRadius:
+                                      const BorderRadius.all(Radius.circular(4)),
+                                  child: Image.network(
+                                      "$getImage${popular?[index].posterPath}")),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(
+                            width: 8,
+                          );
+                        },
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Material(
+                        child: Text(value.message),
+                      ),
+                    );
+                  }
+                }),
                 const SizedBox(
                   height: 12,
                 ),
@@ -160,11 +206,18 @@ class HomePage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: 5,
               itemBuilder: (context, index) {
-                return Card(
-                  child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(4)),
-                      child: Image.network(
-                          "$getImage${popular?[index].posterPath}")),
+                return InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, MovieDetailPage.routeName,
+                        arguments: popular?[index].id);
+                  },
+                  child: Card(
+                    child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(4)),
+                        child: Image.network(
+                            "$getImage${popular?[index].posterPath}")),
+                  ),
                 );
               },
               separatorBuilder: (BuildContext context, int index) {

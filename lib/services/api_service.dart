@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:daero_tv/model/film.dart';
+import 'package:daero_tv/model/movie_detail.dart';
 import 'package:http/http.dart' as http;
 
 const String _baseUrl = "https://api.themoviedb.org/3/movie";
@@ -26,6 +27,17 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return Film.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
+
+  Future<Detail> fetchDetailMovie(int id) async {
+    String url = "$_baseUrl/$id$_apiKey";
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return Detail.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load Data');
     }
