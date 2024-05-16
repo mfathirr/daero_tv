@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:daero_tv/model/movie.dart';
 import 'package:daero_tv/providers/genre_movie.dart';
 import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
@@ -85,7 +86,7 @@ class HomePage extends StatelessWidget {
                   return InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, MovieByGenre.routeName,
-                          arguments: genres[index].id);
+                          arguments: genres[index]);
                     },
                     child: Card(
                         shape: const RoundedRectangleBorder(
@@ -176,32 +177,7 @@ class HomePage extends StatelessWidget {
           );
         } else if (value.state == top_rated.ResultState.hasData) {
           var topRated = value.result;
-          return Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: SizedBox(
-              height: 225,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: Stack(alignment: Alignment.center, children: [
-                      ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(4)),
-                          child: Image.network(
-                              "$getImage${topRated?[index].posterPath}")),
-                    ]),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(
-                    width: 8,
-                  );
-                },
-              ),
-            ),
-          );
+          return _cardImage(topRated);
         } else {
           return Center(
             child: Material(
@@ -223,36 +199,7 @@ class HomePage extends StatelessWidget {
           );
         } else if (value.state == popular.ResultState.hasData) {
           var popular = value.result;
-          return Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: SizedBox(
-              height: 225,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, MovieDetailPage.routeName,
-                          arguments: popular?[index].id);
-                    },
-                    child: Card(
-                      child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(4)),
-                          child: Image.network(
-                              "$getImage${popular?[index].posterPath}")),
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(
-                    width: 8,
-                  );
-                },
-              ),
-            ),
-          );
+          return _cardImage(popular);
         } else {
           return Center(
             child: Material(
@@ -261,6 +208,38 @@ class HomePage extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Padding _cardImage(List<Movie>? movie) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: SizedBox(
+        height: 225,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, MovieDetailPage.routeName,
+                    arguments: movie?[index].id);
+              },
+              child: Card(
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                    child:
+                        Image.network("$getImage${movie?[index].posterPath}")),
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              width: 8,
+            );
+          },
+        ),
+      ),
     );
   }
 }
