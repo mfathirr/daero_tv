@@ -2,7 +2,6 @@ import 'package:daero_tv/model/movie_detail.dart';
 import 'package:daero_tv/providers/detail_movie.dart';
 import 'package:daero_tv/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MovieDetailPage extends StatelessWidget {

@@ -54,4 +54,17 @@ class ApiService {
       throw Exception('Failed to load Data');
     }
   }
+
+  Future<Film> fetchMovieByGenre(int id) async {
+    String withGenres = "with_genres=$id";
+    String url =
+        "https://api.themoviedb.org/3/discover/movie$_apiKey&$withGenres";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      print("berhasil");
+      return Film.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
 }

@@ -9,7 +9,7 @@ class Detail {
   String backdropPath;
   BelongsToCollection belongsToCollection;
   int budget;
-  List<Genre> genres;
+  List<MovieGenre> genres;
   String homepage;
   int id;
   String imdbId;
@@ -67,7 +67,7 @@ class Detail {
         belongsToCollection:
             BelongsToCollection.fromJson(json["belongs_to_collection"]),
         budget: json["budget"],
-        genres: List<Genre>.from(json["genres"].map((x) => Genre.fromJson(x))),
+        genres: List<MovieGenre>.from(json["genres"].map((x) => MovieGenre.fromJson(x))),
         homepage: json["homepage"],
         id: json["id"],
         imdbId: json["imdb_id"],

@@ -3,6 +3,7 @@ import 'package:daero_tv/providers/genre_movie.dart';
 import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
 import 'package:daero_tv/screens/movie_detail.dart';
+import 'package:daero_tv/screens/movie_genre.dart';
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
 import 'package:flutter/material.dart';
@@ -81,14 +82,20 @@ class HomePage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: value.result.genres.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
-                      child: Center(
-                          child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(genres[index].name),
-                      )));
+                  return InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, MovieByGenre.routeName,
+                          arguments: genres[index].id);
+                    },
+                    child: Card(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        child: Center(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(genres[index].name),
+                        ))),
+                  );
                 },
               ),
             ),
