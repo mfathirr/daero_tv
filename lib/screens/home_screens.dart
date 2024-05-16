@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:daero_tv/providers/genre_movie.dart';
 import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
 import 'package:daero_tv/screens/movie_detail.dart';
@@ -28,48 +29,20 @@ class HomePage extends StatelessWidget {
                 const SizedBox(
                   height: 12,
                 ),
-Consumer<popular.MoviePopularProvider>(builder: (context, value, child) {
-                  if (value.state == popular.ResultState.loading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (value.state == popular.ResultState.hasData) {
-                    var popular = value.result;
-                    return SizedBox(
-                      height: 225,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: popular?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(context, MovieDetailPage.routeName,
-                                  arguments: popular?[index].id);
-                            },
-                            child: Card(
-                              child: ClipRRect(
-                                  borderRadius:
-                                      const BorderRadius.all(Radius.circular(4)),
-                                  child: Image.network(
-                                      "$getImage${popular?[index].posterPath}")),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(
-                            width: 8,
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: Material(
-                        child: Text(value.message),
-                      ),
-                    );
-                  }
-                }),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    "Categories",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                _buildGenreList(),
                 const SizedBox(
                   height: 12,
                 ),
@@ -88,6 +61,46 @@ Consumer<popular.MoviePopularProvider>(builder: (context, value, child) {
               ],
             ),
           )),
+    );
+  }
+
+  Consumer<GenreProvider> _buildGenreList() {
+    return Consumer<GenreProvider>(
+      builder: (context, value, child) {
+        if (value.state == ResultState.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (value.state == ResultState.hasData) {
+          var genres = value.result.genres;
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: SizedBox(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: value.result.genres.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Center(
+                          child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(genres[index].name),
+                      )));
+                },
+              ),
+            ),
+          );
+        } else {
+          return Center(
+            child: Material(
+              child: Text(value.message),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -156,27 +169,30 @@ Consumer<popular.MoviePopularProvider>(builder: (context, value, child) {
           );
         } else if (value.state == top_rated.ResultState.hasData) {
           var topRated = value.result;
-          return SizedBox(
-            height: 225,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Stack(alignment: Alignment.center, children: [
-                    ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4)),
-                        child: Image.network(
-                            "$getImage${topRated?[index].posterPath}")),
-                  ]),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 8,
-                );
-              },
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: SizedBox(
+              height: 225,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: Stack(alignment: Alignment.center, children: [
+                      ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                          child: Image.network(
+                              "$getImage${topRated?[index].posterPath}")),
+                    ]),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    width: 8,
+                  );
+                },
+              ),
             ),
           );
         } else {
@@ -200,31 +216,34 @@ Consumer<popular.MoviePopularProvider>(builder: (context, value, child) {
           );
         } else if (value.state == popular.ResultState.hasData) {
           var popular = value.result;
-          return SizedBox(
-            height: 225,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, MovieDetailPage.routeName,
-                        arguments: popular?[index].id);
-                  },
-                  child: Card(
-                    child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4)),
-                        child: Image.network(
-                            "$getImage${popular?[index].posterPath}")),
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 8,
-                );
-              },
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: SizedBox(
+              height: 225,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, MovieDetailPage.routeName,
+                          arguments: popular?[index].id);
+                    },
+                    child: Card(
+                      child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(4)),
+                          child: Image.network(
+                              "$getImage${popular?[index].posterPath}")),
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    width: 8,
+                  );
+                },
+              ),
             ),
           );
         } else {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:daero_tv/model/film.dart';
+import 'package:daero_tv/model/genre.dart';
 import 'package:daero_tv/model/movie_detail.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,6 +39,17 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return Detail.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
+
+  Future<Genre> fetchGenreMovie() async {
+    String query = "language=en";
+    String url = "https://api.themoviedb.org/3/genre/movie/list$_apiKey&$query";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return Genre.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load Data');
     }

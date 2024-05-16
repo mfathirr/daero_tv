@@ -1,3 +1,4 @@
+import 'package:daero_tv/providers/genre_movie.dart';
 import 'package:daero_tv/providers/popular_movie.dart';
 import 'package:daero_tv/providers/top_rated_movie.dart';
 import 'package:daero_tv/screens/home_screens.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => MovieTopRatedProvider(apiService: ApiService()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => GenreProvider(apiService: ApiService()),
         )
       ],
       child: MaterialApp(
