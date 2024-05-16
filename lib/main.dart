@@ -1,3 +1,4 @@
+import 'package:daero_tv/model/movie_genre.dart';
 import 'package:daero_tv/providers/genre_movie.dart';
 import 'package:daero_tv/providers/popular_movie.dart';
 import 'package:daero_tv/providers/top_rated_movie.dart';
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
           MovieDetailPage.routeName: (context) => MovieDetailPage(
               id: ModalRoute.of(context)?.settings.arguments as int),
           MovieByGenre.routeName: (context) => MovieByGenre(
-              id: ModalRoute.of(context)?.settings.arguments as int)
+                genre: ModalRoute.of(context)?.settings.arguments as MovieGenre,
+              )
         },
       ),
     );

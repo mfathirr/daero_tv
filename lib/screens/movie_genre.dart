@@ -3,23 +3,25 @@ import 'package:daero_tv/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/movie_genre.dart';
+
 class MovieByGenre extends StatelessWidget {
   static const routeName = 'movie_genre_page';
-  final int id;
+  final MovieGenre genre;
 
   const MovieByGenre({
-    super.key,
-    required this.id,
+    super.key, required this.genre,
   });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) =>
-          MovieByGenreProvider(apiService: ApiService(), id: id),
+          MovieByGenreProvider(apiService: ApiService(), id: genre.id),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Movie List"),
+          centerTitle: true,
+          title: Text(genre.name),
         ),
         body: Consumer<MovieByGenreProvider>(
           builder: (context, value, child) {
