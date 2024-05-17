@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:daero_tv/model/film.dart';
 import 'package:daero_tv/model/genre.dart';
+import 'package:daero_tv/model/image.dart';
 import 'package:daero_tv/model/movie_detail.dart';
 import 'package:http/http.dart' as http;
 
@@ -61,7 +62,32 @@ class ApiService {
         "https://api.themoviedb.org/3/discover/movie$_apiKey&$withGenres";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      print("berhasil");
+      return Film.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
+
+  Future<ImageById> fetchImageById(int id) async {
+    String image = "/images";
+    String url = "$_baseUrl/$id$image$_apiKey";
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return ImageById.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load Data');
+    }
+  }
+
+  Future<Film> fetchMovieRecommendations(int id) async {
+    String recommend = "/recommendations";
+    String url = "$_baseUrl/$id$recommend$_apiKey";
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
       return Film.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load Data');
