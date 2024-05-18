@@ -12,8 +12,19 @@ class PopularMovies extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        backgroundColor: const Color(0xFF222222),
         centerTitle: true,
-        title: const Text("Most Popular"),
+        title: const Text(
+          "Most Popular",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Consumer<MoviePopularProvider>(
         builder:

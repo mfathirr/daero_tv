@@ -1,8 +1,9 @@
 import 'package:daero_tv/model/movie_detail.dart';
-import 'package:daero_tv/providers/detail_movie.dart';
+import 'package:daero_tv/providers/detail_movie.dart' as movie_detail;
 import 'package:daero_tv/providers/image_movie_provider.dart' as image_provider;
+import 'package:daero_tv/providers/movie_recommend_provider.dart'
+    as movie_recommed;
 import 'package:daero_tv/services/api_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,26 +24,33 @@ class MovieDetailPage extends StatelessWidget {
                 image_provider.ImageProvider(id: id, apiService: ApiService()),
           ),
           ChangeNotifierProvider(
-            create: (context) =>
-                MovieDetailProvider(apiService: ApiService(), id: id),
+            create: (context) => movie_detail.MovieDetailProvider(
+                apiService: ApiService(), id: id),
           ),
+          ChangeNotifierProvider(
+            create: (context) => movie_recommed.MovieRecommendProvider(
+                id: id, apiService: ApiService()),
+          )
         ],
         child: _buildDetailPage(),
       ),
     );
   }
 
-  Consumer<MovieDetailProvider> _buildDetailPage() {
-    return Consumer<MovieDetailProvider>(
+  Consumer<movie_detail.MovieDetailProvider> _buildDetailPage() {
+    return Consumer<movie_detail.MovieDetailProvider>(
       builder: (context, value, child) {
-        if (value.state == ResultState.loading) {
+        if (value.state == movie_detail.ResultState.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        } else if (value.state == ResultState.hasData) {
+        } else if (value.state == movie_detail.ResultState.hasData) {
           var detail = value.result;
           return CustomScrollView(
-            slivers: [_buildAppBar(detail), _buildBodyDetail(detail, context)],
+            slivers: [
+              _buildAppBar(detail, context),
+              _buildBodyDetail(detail, context)
+            ],
           );
         } else {
           return Center(
@@ -78,68 +86,57 @@ class MovieDetailPage extends StatelessWidget {
               children: [
                 Text(
                   detail.originalTitle,
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(color: Colors.white),
                 ),
                 Text(
                   detail.tagline,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: Colors.white),
                 ),
                 _buildListGenre(context, detail),
                 Row(
                   children: [
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(detail.originalLanguage),
-                      ),
+                    Text(
+                      detail.releaseDate.toString().substring(0, 10),
+                      style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(
                       width: 6,
                     ),
-                    Row(
-                      children: [
-                        const Icon(Icons.thumb_up_rounded),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Text(detail.popularity.toString()),
-                      ],
+                    Text(
+                      "${detail.runtime} minutes",
+                      style: const TextStyle(color: Colors.white),
                     ),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                    Text("${detail.runtime} minutes"),
                   ],
                 ),
                 const SizedBox(
                   height: 6,
                 ),
                 Text(
-                  "Overall",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w500),
+                  "Overview",
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w500, color: Colors.white),
                 ),
                 const SizedBox(
                   height: 6,
                 ),
                 Text(
                   detail.overview,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w400),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w400, color: Colors.white),
                 ),
                 const SizedBox(
                   height: 6,
                 ),
                 Text(
                   "Documentations",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w500),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w500, color: Colors.white),
                 ),
                 const SizedBox(
                   height: 6,
@@ -148,22 +145,72 @@ class MovieDetailPage extends StatelessWidget {
                 const SizedBox(
                   height: 6,
                 ),
+                // Text(
+                //   "Production Companies",
+                //   style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                //       fontWeight: FontWeight.w500, color: Colors.white),
+                // ),
+                // const SizedBox(
+                //   height: 6,
+                // ),
+                // _buildListCompanies(detail),
+                // const SizedBox(
+                //   height: 6,
+                // ),
                 Text(
-                  "Production Companies",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w500),
+                  "Movie Recommendations",
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w500, color: Colors.white),
                 ),
                 const SizedBox(
                   height: 6,
                 ),
-                _buildListCompanies(detail)
+                _buildMovieRecommend()
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Consumer<movie_recommed.MovieRecommendProvider> _buildMovieRecommend() {
+    return Consumer<movie_recommed.MovieRecommendProvider>(
+      builder: (context, value, child) {
+        if (value.state == movie_recommed.ResultState.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (value.state == movie_recommed.ResultState.hasData) {
+          var recommend = value.result.movie;
+          return SizedBox(
+            height: 170,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: recommend.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                    child: InkWell(
+                      onTap: () => Navigator.pushNamed(
+                          context, MovieDetailPage.routeName,
+                          arguments: recommend[index].id),
+                      child: Image.network(
+                          "$getImage${recommend[index].posterPath}"),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        } else {
+          return Center(
+            child: Text(value.message),
+          );
+        }
+      },
     );
   }
 
@@ -177,7 +224,7 @@ class MovieDetailPage extends StatelessWidget {
         } else if (value.state == image_provider.ResultState.hasData) {
           var image = value.result.backdrops;
           return SizedBox(
-            height: 159,
+            height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: image.length,
@@ -209,13 +256,17 @@ class MovieDetailPage extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: detail.genres.length,
         itemBuilder: (context, index) {
-          return Center(child: Text(detail.genres[index].name));
+          return Center(
+              child: Text(
+            detail.genres[index].name,
+            style: const TextStyle(color: Color(0xFFCAC4C4)),
+          ));
         },
         separatorBuilder: (BuildContext context, int index) {
           return const VerticalDivider(
             indent: 5,
             endIndent: 5,
-            color: Colors.black,
+            color: Color(0xFFCAC4C4),
           );
         },
       ),
@@ -247,25 +298,23 @@ class MovieDetailPage extends StatelessWidget {
     );
   }
 
-  SliverAppBar _buildAppBar(Detail value) {
+  SliverAppBar _buildAppBar(Detail value, BuildContext context) {
     return SliverAppBar(
-      title: Text(value.title),
-      // expandedHeight: 250,
-      // flexibleSpace: FlexibleSpaceBar(
-      //   background: Stack(alignment: Alignment.bottomLeft, children: [
-      //     Image.network(
-      //       "$getImage${value.backdropPath}",
-      //       fit: BoxFit.cover,
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.all(16.0),
-      //       child: ClipRRect(
-      //         borderRadius: const BorderRadius.all(Radius.circular(6)),
-      //         child: Image.network(width: 80, "$getImage${value.posterPath}"),
-      //       ),
-      //     )
-      //   ]),
-      // ),
+      pinned: true,
+      leading: IconButton(
+        color: Colors.white,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(Icons.arrow_back_rounded),
+      ),
+      title: Text(
+        value.title,
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: const Color(0xFF222222),
+      surfaceTintColor: const Color(0xFF222222),
     );
   }
 }

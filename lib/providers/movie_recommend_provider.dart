@@ -1,37 +1,37 @@
-import 'package:daero_tv/services/api_service.dart';
-import 'package:flutter/material.dart';
+import 'package:daero_tv/model/film.dart';
+import 'package:flutter/cupertino.dart';
 
-import '../model/movie.dart';
+import '../services/api_service.dart';
 
 enum ResultState { loading, noData, hasData, error }
 
-class MovieByGenreProvider extends ChangeNotifier {
+class MovieRecommendProvider extends ChangeNotifier {
   final ApiService apiService;
   final int id;
 
-  MovieByGenreProvider({required this.apiService, required this.id}) {
-    fetchMovieByGenre();
+  MovieRecommendProvider({required this.id, required this.apiService}) {
+    fetchMovieRecommend();
   }
 
-  List<Movie>? _result;
   late ResultState _state;
+  late Film _result;
   String _message = '';
 
   ResultState get state => _state;
-  List<Movie>? get result => _result;
+  Film get result => _result;
   String get message => _message;
 
-  Future<dynamic> fetchMovieByGenre() async {
+  Future<dynamic> fetchMovieRecommend() async {
     try {
       _state = ResultState.loading;
-      final movie = await apiService.fetchMovieByGenre(id);
-      if (movie.movie.isEmpty) {
+      final recommend = await apiService.fetchMovieRecommendations(id);
+      if (recommend.movie.isEmpty) {
         _state = ResultState.noData;
         _message = 'Data is Empty';
       } else {
         _state = ResultState.hasData;
         notifyListeners();
-        return _result = movie.movie;
+        return _result = recommend;
       }
     } catch (e) {
       _state = ResultState.error;

@@ -13,8 +13,20 @@ class TopRatedMovies extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_rounded),
+        ),
+        backgroundColor: const Color(0xFF222222),
         centerTitle: true,
-        title: const Text("Top Movie"),
+        title: const Text(
+          "Top Movies",
+          style:
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Consumer<MovieTopRatedProvider>(
         builder:

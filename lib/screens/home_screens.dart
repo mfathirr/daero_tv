@@ -8,6 +8,7 @@ import 'package:daero_tv/screens/movie_genre.dart';
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,13 +21,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Daero TV'),
-          ),
+          appBar: _buildAppBarHome(context),
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 12,
+                ),
                 _buildCarousel(),
                 const SizedBox(
                   height: 12,
@@ -35,10 +37,8 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     "Categories",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
                 const SizedBox(
@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
                   height: 12,
                 ),
                 _buildTextIconArrow(
-                    "Popular Movie", context, PopularMovies.routeName),
+                    "Popular Movies", context, PopularMovies.routeName),
                 const SizedBox(
                   height: 12,
                 ),
@@ -58,11 +58,44 @@ class HomePage extends StatelessWidget {
                   height: 12,
                 ),
                 _buildTextIconArrow(
-                    "Top-Rated Movie", context, TopRatedMovies.routeName),
+                    "Top-Rated Movies", context, TopRatedMovies.routeName),
+                const SizedBox(
+                  height: 12,
+                ),
                 _buildTopRatedMovie()
               ],
             ),
           )),
+    );
+  }
+
+  AppBar _buildAppBarHome(BuildContext context) {
+    return AppBar(
+      toolbarHeight: 80,
+      backgroundColor: const Color(0xFF222222),
+      surfaceTintColor: const Color(0xFF222222),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Hello, Fathir!',
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 2,
+          ),
+          Text(
+            'Lets, Stream your Favorite Movie!',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
     );
   }
 
@@ -83,18 +116,26 @@ class HomePage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: value.result.genres.length,
                 itemBuilder: (context, index) {
-                  return InkWell(
+                  return GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, MovieByGenre.routeName,
                           arguments: genres[index]);
                     },
                     child: Card(
+                        color: const Color(0xFF246BFD),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                         child: Center(
                             child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(genres[index].name),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          child: Text(
+                            genres[index].name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(color: Colors.white),
+                          ),
                         ))),
                   );
                 },
@@ -154,15 +195,16 @@ class HomePage extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
+                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          IconButton(
-              padding: EdgeInsets.zero,
-              // constraints: const BoxConstraints(),
-              onPressed: () {
+          GestureDetector(
+              onTap: () {
                 Navigator.pushNamed(context, route, arguments: getImage);
               },
-              icon: const Icon(Icons.arrow_forward_ios_rounded))
+              child: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Color(0xFF246BFD),
+              ))
         ],
       ),
     );

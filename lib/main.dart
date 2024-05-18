@@ -9,6 +9,7 @@ import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
 import 'package:daero_tv/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -34,6 +35,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Daero TV',
+        theme: ThemeData(
+          scaffoldBackgroundColor: const Color(0xFF222222),
+          fontFamily: GoogleFonts.poppins().fontFamily,
+        ),
         initialRoute: HomePage.routeName,
         routes: {
           HomePage.routeName: (context) => const HomePage(),
