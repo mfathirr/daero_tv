@@ -7,8 +7,8 @@ import 'package:daero_tv/screens/movie_detail.dart';
 import 'package:daero_tv/screens/movie_genre.dart';
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
+import 'package:daero_tv/services/notification_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -71,6 +71,16 @@ class HomePage extends StatelessWidget {
 
   AppBar _buildAppBarHome(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        onPressed: () {
+          NotificationService.simpleNotification(
+              title: "test", body: "test mon", payload: "test min");
+        },
+        icon: const Icon(
+          Icons.notifications,
+          color: Colors.white,
+        ),
+      ),
       toolbarHeight: 80,
       backgroundColor: const Color(0xFF222222),
       surfaceTintColor: const Color(0xFF222222),
