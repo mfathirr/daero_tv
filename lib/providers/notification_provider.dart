@@ -6,14 +6,18 @@ class NotificationProvider extends ChangeNotifier {
 
   bool get isNotificationEnabled => _isNotificationEnabled;
 
+  final NotificationService notificationService = NotificationService();
+
   Future<void> toggleNotification(bool isEnabled) async {
     _isNotificationEnabled = isEnabled;
     notifyListeners();
 
     if (isEnabled) {
-      await NotificationService.periodicNotification();
+      await notificationService.scheduleNotification();
+      print("succes min nyala");
     } else {
       NotificationService.flutterLocalNotificationsPlugin.cancelAll();
+      print("succes min mati nih");
     }
   }
 }

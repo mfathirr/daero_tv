@@ -8,7 +8,6 @@ import 'package:daero_tv/screens/movie_detail.dart';
 import 'package:daero_tv/screens/movie_genre.dart';
 import 'package:daero_tv/screens/popular_movies.dart';
 import 'package:daero_tv/screens/top_rated_movies.dart';
-import 'package:daero_tv/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
