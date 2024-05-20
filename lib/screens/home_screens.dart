@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:daero_tv/model/movie.dart';
 import 'package:daero_tv/providers/genre_movie.dart';
+import 'package:daero_tv/providers/notification_provider.dart';
 import 'package:daero_tv/providers/popular_movie.dart' as popular;
 import 'package:daero_tv/providers/top_rated_movie.dart' as top_rated;
 import 'package:daero_tv/screens/movie_detail.dart';
@@ -21,66 +22,81 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: _buildAppBarHome(context),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 12,
-                ),
-                _buildCarousel(),
-                const SizedBox(
-                  height: 12,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    "Categories",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                _buildGenreList(),
-                const SizedBox(
-                  height: 12,
-                ),
-                _buildTextIconArrow(
-                    "Popular Movies", context, PopularMovies.routeName),
-                const SizedBox(
-                  height: 12,
-                ),
-                _buildPopularMovie(),
-                const SizedBox(
-                  height: 12,
-                ),
-                _buildTextIconArrow(
-                    "Top-Rated Movies", context, TopRatedMovies.routeName),
-                const SizedBox(
-                  height: 12,
-                ),
-                _buildTopRatedMovie()
-              ],
+          appBar: _buildAppBarHome(context), body: _buildBodyHome(context)),
+    );
+  }
+
+  SingleChildScrollView _buildBodyHome(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 12,
+          ),
+          _buildCarousel(),
+          const SizedBox(
+            height: 12,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              "Categories",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
-          )),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          _buildGenreList(),
+          const SizedBox(
+            height: 12,
+          ),
+          _buildTextIconArrow(
+              "Popular Movies", context, PopularMovies.routeName),
+          const SizedBox(
+            height: 12,
+          ),
+          _buildPopularMovie(),
+          const SizedBox(
+            height: 12,
+          ),
+          _buildTextIconArrow(
+              "Top-Rated Movies", context, TopRatedMovies.routeName),
+          const SizedBox(
+            height: 12,
+          ),
+          _buildTopRatedMovie()
+        ],
+      ),
     );
   }
 
   AppBar _buildAppBarHome(BuildContext context) {
+    final notification = Provider.of<NotificationProvider>(context);
     return AppBar(
-      leading: IconButton(
-        onPressed: () {
-          NotificationService.simpleNotification(
-              title: "test", body: "test mon", payload: "test min");
-        },
-        icon: const Icon(
-          Icons.notifications,
-          color: Colors.white,
-        ),
-      ),
+      actions: [
+        IconButton(
+          onPressed: () {
+            notification
+                .toggleNotification(!notification.isNotificationEnabled);
+          },
+          icon: notification.isNotificationEnabled
+              ? const Icon(
+                  Icons.notifications_active,
+                  color: Colors.white,
+                  size: 30,
+                )
+              : const Icon(
+                  Icons.notifications_active_outlined,
+                  color: Colors.white,
+                  size: 30,
+                ),
+        )
+      ],
       toolbarHeight: 80,
       backgroundColor: const Color(0xFF222222),
       surfaceTintColor: const Color(0xFF222222),
